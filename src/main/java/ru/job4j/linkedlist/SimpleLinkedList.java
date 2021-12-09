@@ -16,16 +16,18 @@ public class SimpleLinkedList<E> implements List<E> {
 
         E item;
         Node<E> next;
+        Node<E> prev;
 
-        Node(E element, Node<E> next) {
+        Node(Node<E> prev, E element, Node<E> next) {
             this.item = element;
+            this.prev = prev;
             this.next = next;
         }
     }
     @Override
     public void add(E value) {
         final Node<E> l = last;
-        final Node<E> newNode = new Node<>(value, null);
+        final Node<E> newNode = new Node<>(l, value, null);
         last = newNode;
         if (l == null) {
             first = newNode;
