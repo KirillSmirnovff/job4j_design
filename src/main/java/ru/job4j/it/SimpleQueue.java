@@ -15,10 +15,9 @@ public class SimpleQueue<T> {
         if (countOut == 0) {
             for (int i = 0; i < countIn; i++) {
                 out.push(in.pop());
+                countOut++;
             }
-            countOut = countIn;
             countIn = 0;
-
         }
         countOut--;
         return out.pop();
