@@ -40,13 +40,6 @@ public class ListUtilsTest {
         assertThat(input, is(List.of(0, 1)));
     }
 
-    @Test (expected = IllegalStateException.class)
-    public void whenListIsEmptyThenException() {
-        List<Integer> input = new ArrayList<>();
-        Predicate<Integer> filter = s -> s > 1;
-        ListUtils.removeIf(input, filter);
-    }
-
     @Test
     public void whenReplaceIf() {
         List<Integer> input = new ArrayList<>(Arrays.asList(0, 1, 2));
@@ -63,3 +56,4 @@ public class ListUtilsTest {
         assertThat(input, is(List.of(2, 3)));
     }
 }
+
