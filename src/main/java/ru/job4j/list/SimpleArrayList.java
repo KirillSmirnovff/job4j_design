@@ -8,6 +8,10 @@ public class SimpleArrayList<T> implements List<T> {
     private int size = 0;
     private int modCount = 0;
 
+    public SimpleArrayList() {
+        this.container = (T[]) new Object[0];
+    }
+
     public SimpleArrayList(int capacity) {
         this.container = (T[]) new Object[capacity];
     }
