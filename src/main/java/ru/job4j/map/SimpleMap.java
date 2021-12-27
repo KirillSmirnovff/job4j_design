@@ -14,7 +14,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean put(K key, V value) {
-        int index = hash(key.hashCode());
+        int index = indexFor(hash(key.hashCode()));
         boolean result = table[index] == null;
         if (result) {
             expand();
@@ -34,14 +34,17 @@ public class SimpleMap<K, V> implements Map<K, V> {
     }
 
     private int hash(int hashCode) {
-        return hashCode % capacity;
+        return hashCode ^ (hashCode >>> 16);
+    }
+
+    private int indexFor(int hash) {
+        return hash & (capacity - 1);
     }
 
     private void expand() {
-        if (size / (double) capacity > LOAD_FACTOR) {
+        if (size / LOAD_FACTOR >= capacity) {
             MapEntry<K, V>[] tempTable = table;
             capacity *= 2;
-            modCount = 0;
             size = 0;
             table = new MapEntry[capacity];
             for (MapEntry<K, V> mapEntry : tempTable) {
@@ -55,7 +58,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
     @Override
     public V get(K key) {
         V result = null;
-        int index = hash(key.hashCode());
+        int index = indexFor(hash(key.hashCode()));
         if (table[index] != null) {
             result = table[index].value;
         }
@@ -64,7 +67,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean remove(K key) {
-        int index = hash(key.hashCode());
+        int index = indexFor(hash(key.hashCode()));
         boolean result = table[index] != null
                 && key.hashCode() == table[index].key.hashCode()
                 && key.equals(table[index].key);
@@ -86,27 +89,22 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
             @Override
             public boolean hasNext() {
+                if (expectedModCount != modCount) {
+                    throw new ConcurrentModificationException();
+                }
+                while (count < size && table[index] == null) {
+                    index++;
+                }
                 return count < size;
             }
 
             @Override
             public K next() {
-                if (expectedModCount != modCount) {
-                    throw new ConcurrentModificationException();
-                }
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                K result = null;
-                for (int i = index; i < table.length; i++) {
-                    if (table[i] != null) {
-                        index = i + 1;
-                        count++;
-                        result =  table[i].key;
-                        break;
-                    }
-                }
-                return result;
+                count++;
+                return table[index].key;
             }
         };
     }
