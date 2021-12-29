@@ -36,14 +36,8 @@ public class SimpleMapTest {
     }
 
     @Test
-    public void whenPutKeyWithSameHashAndNotEqualsThenFalse() {
+    public void whenSameHashThenFalse() {
         assertFalse(map.put(9, "Sam"));
-    }
-
-    @Test
-    public void whenSameKeyThenReplace() {
-        map.put(1, "Sam");
-        assertThat(map.get(1), is("Sam"));
     }
 
     @Test
@@ -54,6 +48,11 @@ public class SimpleMapTest {
     @Test
     public void whenGetThenValue() {
         assertThat(map.get(1), is("Mike"));
+    }
+
+    @Test
+    public void whenSameHashButNotEqualThenGetNull() {
+        assertNull(map.get(9));
     }
 
     @Test
