@@ -21,15 +21,14 @@ public class Config {
         String[] out = toString().split(System.lineSeparator());
         for (String line : out) {
             line = line.strip();
-            if (!line.startsWith("#") && line.contains("=")) {
-                if (line.startsWith("=")) {
+            if (!line.isEmpty() && !line.startsWith("#")) {
+                long count = line.chars().
+                        filter(ch -> ch == 61).
+                        count();
+                if (count != 1 || line.startsWith("=") || line.endsWith("=")) {
                     throw new IllegalArgumentException();
                 }
                 String[] pair = line.split("=");
-                if (line.endsWith("=")) {
-                    values.put(pair[0], null);
-                    continue;
-                }
                 values.put(pair[0], pair[1]);
             }
         }
