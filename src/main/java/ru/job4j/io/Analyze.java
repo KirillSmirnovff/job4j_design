@@ -29,7 +29,7 @@ public class Analyze {
                 }
             }
             if (status == 0) {
-                result.add(resultLine[0] + "; now");
+                result.add(resultLine[0] + ";now");
             }
         } catch (Exception e) {
             e.printStackTrace();
