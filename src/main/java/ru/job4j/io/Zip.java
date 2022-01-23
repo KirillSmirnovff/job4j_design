@@ -40,7 +40,7 @@ public class Zip {
 
     public static void main(String[] args) throws IOException {
         if (args.length != 3) {
-            throw new IllegalArgumentException("Need to set 3 arguments: root folder, file extension and archive name.");
+            throw new IllegalArgumentException("Need to set 3 arguments: root folder, file extension and archive name");
         }
         ArgsName argsName = ArgsName.of(args);
         String[] values = validation(argsName);
