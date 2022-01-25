@@ -24,10 +24,36 @@ public class ConsoleChat {
         boolean active = true;
         List<String> phrases = readPhrases();
         List<String> log = new ArrayList<>();
+        log.add("Привет! Я общительный бот, давай поговорим!");
+        System.out.println("Привет! Я общительный бот, давай поговорим!");
         while (run) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String input = reader.readLine();
+            log.add(input);
             if (OUT.equals(input)) {
+                log.add("Пока!");
+                System.out.println("Пока!");
+                run = false;
+                saveLog(log);
+                continue;
+            }
+            if (STOP.equals(input)) {
+                log.add("Замолкаю");
+                System.out.println("Замолкаю");
+                active = false;
+                continue;
+            }
+            if (CONTINUE.equals(input) && !active) {
+                log.add("Снова буду отвечать");
+                System.out.println("Снова буду отвечать");
+                active = true;
+                continue;
+            }
+            if (active) {
+                int index = (int) (Math.random() * phrases.size());
+                String currentPhrase = phrases.get(index);
+                log.add(currentPhrase);
+                System.out.println(currentPhrase);
             }
         }
     }
@@ -50,8 +76,8 @@ public class ConsoleChat {
         }
     }
 
-    public static void main(String[] args) {
-        ConsoleChat cc = new ConsoleChat("", "");
+    public static void main(String[] args) throws IOException {
+        ConsoleChat cc = new ConsoleChat("DialogLog.txt", "BotPhrases.txt");
         cc.run();
     }
 }
