@@ -10,7 +10,7 @@ public class ArgsName {
 
     public String get(String key) {
         if (!values.containsKey(key)) {
-            throw new IllegalArgumentException("Key doesn't exist");
+            throw new IllegalArgumentException("Key " + key + " doesn't exist");
         }
         return values.get(key);
     }
