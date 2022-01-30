@@ -1,25 +1,51 @@
 package ru.job4j.io;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class CSVReader {
-    public static void handle(ArgsName argsName) throws Exception {
+    public void handle(ArgsName argsName) throws Exception {
+        String delimiter = argsName.get("delimiter");
+        String out = argsName.get("out");
         StringJoiner joiner = new StringJoiner(",");
         List<String> result = new ArrayList<>();
+        List<String> filter = Arrays.stream(argsName.get("filter").split(",")).toList();
         try (Scanner scanner = new Scanner(new FileInputStream(argsName.get("path"))).
-                useDelimiter(argsName.get("delimiter"))) {
+                useDelimiter(delimiter)) {
             while (scanner.hasNext()) {
                 joiner.add(scanner.next());
             }
         }
-        System.out.println(joiner);
+        String[] array = joiner.toString().split(System.lineSeparator());
+        String[] nameOfColumns = array[0].split(",");
+        List<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < nameOfColumns.length; i++) {
+            if (filter.contains(nameOfColumns[i])) {
+                indexes.add(i);
+            }
+        }
+        for (String string : array) {
+            StringJoiner lineJoiner = new StringJoiner(delimiter);
+            String[] line = string.split(",");
+            for (int i = 0; i < line.length; i++) {
+                if (indexes.contains(i)) {
+                    lineJoiner.add(line[i]);
+                }
+            }
+            result.add(lineJoiner.toString());
+        }
+        if (out.equals("stdout")) {
+            for (String line : result) {
+                System.out.println(line);
+            }
+        } else {
+            try (PrintStream writer = new PrintStream(new FileOutputStream(out))) {
+                result.forEach(writer::println);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private ArgsName validation(String[] args) {
@@ -38,5 +64,11 @@ public class CSVReader {
             throw new IllegalArgumentException("Wrong output format");
         }
         return argsName;
+    }
+
+    public static void main(String[] args) throws Exception {
+        CSVReader reader = new CSVReader();
+        ArgsName argsName = reader.validation(args);
+        reader.handle(argsName);
     }
 }
