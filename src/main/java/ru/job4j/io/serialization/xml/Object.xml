@@ -1,0 +1,8 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<game name="The Witcher 3" pg13="false" cost="1499">
+    <genres>
+        <genre>Action</genre>
+        <genre>RPG</genre>
+    </genres>
+    <publisher name="CD Projekt RED"/>
+</game>
