@@ -1,27 +1,30 @@
 package ru.job4j.io.serialization.json;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
         final Game game = new Game("The Witcher 3", false, 1499, new String[]{"Action", "RPG"},
                 new Publisher("CD Projekt RED"));
-        final Gson gson = new GsonBuilder().create();
-        System.out.println(gson.toJson(game));
-        final String gameJson =
-                "{"
-                    + "\"name\":\"LittleBigPlanet\","
-                    + "\"pg13\":false,"
-                    + "\"cost\":1499,"
-                    + "\"genre\":"
-                    + "[\"Puzzle\",\"Platformer\",\"SandBox\"],"
-                    + "\"publisher\":"
-                    + "{"
-                    + "\"name\":\"SCEE\""
-                    + "}"
-                    + "}";
-        final Game gameMod = gson.fromJson(gameJson, Game.class);
-        System.out.println(gameMod);
+        JSONObject jsonPublisher = new JSONObject("{\"name\":\"CD Projekt RED\"}");
+
+        List<String> list = new ArrayList<>();
+        list.add("Action");
+        list.add("RPG");
+        JSONArray jsonGenres = new JSONArray(list);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", game.getName());
+        jsonObject.put("pg13", game.isPg13());
+        jsonObject.put("cost", game.getCost());
+        jsonObject.put("genre", jsonGenres);
+        jsonObject.put("publisher", jsonPublisher);
+
+        System.out.println(jsonObject);
+        System.out.println(new JSONObject(game));
     }
 }

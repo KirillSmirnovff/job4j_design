@@ -17,6 +17,26 @@ public class Game {
         this.publisher = publisher;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public boolean isPg13() {
+        return pg13;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public String[] getGenre() {
+        return genre;
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
     @Override
     public String toString() {
         return "Game{"
