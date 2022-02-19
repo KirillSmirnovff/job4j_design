@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 public class Searcher {
 
@@ -18,7 +19,8 @@ public class Searcher {
         Path root = Paths.get(arguments[0]);
         Predicate<Path> condition;
         if ("mask".equals(arguments[2])) {
-            condition = path -> path.toFile().getName().endsWith(arguments[1]);
+            Pattern pattern = Pattern.compile(arguments[1]);
+            condition = path -> pattern.matcher(path.toString()).find();
         } else {
             condition = path -> arguments[1].equals(path.toFile().getName());
         }
@@ -68,11 +70,9 @@ public class Searcher {
         if (!("mask".equals(searchType) || "name".equals(searchType))) {
             throw new IllegalArgumentException("Wrong type of search: need to be \"name\" or \"mask\"");
         }
-        if ("mask".equals(values[2])) {
-            values[1] = values[1].replace("*", "");
-            if (!values[1].startsWith(".")) {
-                values[1] = "." + values[1];
-            }
+        if ("mask".equals(searchType)) {
+            values[1] = values[1].replace("*", "\\\\*.")
+                    .replace("?", "\\\\?.") + "$";
         }
         return values;
     }
