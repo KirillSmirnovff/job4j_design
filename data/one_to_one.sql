@@ -6,7 +6,7 @@ create table people(
 create table insurance_policy(
     id serial primary key,
     number varchar(255),
-    people_id int references people(id)
+    people_id int references people(id) unique
 );
 
 insert into people(name) values ('Smirnov K.M.');
