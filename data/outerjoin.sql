@@ -21,8 +21,8 @@ left join employers e on d.id = e.dep_id;
 select * from employers e
 right join departments d on e.dep_id = d.id;
 
-select * from departments d f
-ull join employers e on d.id = e.dep_id;
+select * from departments d
+full join employers e on d.id = e.dep_id;
 
 select * from departments d
 cross join employers e;
