@@ -34,15 +34,15 @@ insert into car(name,body_id, engine_id,transmission_id)
 values('Renault', 1, 1, 1),('BMW',4,1,1),('VolksWagen',3,1,1);
 
 select c.name, b.name, e.name, t.name from car c
-join body b
+left join body b
 on c.body_id = b.id
-join engine e
+left join engine e
 on c.engine_id = e.id
-join transmission t
+left join transmission t
 on c.transmission_id = t.id;
 
 select b.name from engine e
-join car c
+left join car c
 on c.body_id = e.id
 where c.body_id is null;
 
