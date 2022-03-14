@@ -90,25 +90,27 @@ public class TableEditor implements AutoCloseable {
         }
     }
 
-    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
-        InputStream in = new FileInputStream("./data/app.properties");
-        Properties config = new Properties();
-        config.load(in);
-        TableEditor tableEditor = new TableEditor(config);
-        tableEditor.createTable("cpu");
-        System.out.println(getTableScheme(tableEditor.connection, "cpu"));
-        tableEditor.addColumn("cpu", "amd", "varchar(255)");
-        System.out.println(getTableScheme(tableEditor.connection, "cpu"));
-        tableEditor.renameColumn("cpu", "amd", "intel");
-        System.out.println(getTableScheme(tableEditor.connection, "cpu"));
-        tableEditor.dropColumn("cpu", "intel");
-        System.out.println(getTableScheme(tableEditor.connection, "cpu"));
-        tableEditor.dropTable("cpu");
-        try {
-            String schema = getTableScheme(tableEditor.connection, "cpu");
-            System.out.println(schema);
-        } catch (PSQLException e) {
-            System.out.println("Table is not exists");
+    public static void main(String[] args) throws Exception {
+        try (InputStream in = new FileInputStream("./data/app.properties")) {
+            Properties config = new Properties();
+            config.load(in);
+            try (TableEditor tableEditor = new TableEditor(config)) {
+                tableEditor.createTable("cpu");
+                System.out.println(getTableScheme(tableEditor.connection, "cpu"));
+                tableEditor.addColumn("cpu", "amd", "varchar(255)");
+                System.out.println(getTableScheme(tableEditor.connection, "cpu"));
+                tableEditor.renameColumn("cpu", "amd", "intel");
+                System.out.println(getTableScheme(tableEditor.connection, "cpu"));
+                tableEditor.dropColumn("cpu", "intel");
+                System.out.println(getTableScheme(tableEditor.connection, "cpu"));
+                tableEditor.dropTable("cpu");
+                try {
+                    String schema = getTableScheme(tableEditor.connection, "cpu");
+                    System.out.println(schema);
+                } catch (PSQLException e) {
+                    System.out.println("Table is not exists");
+                }
+            }
         }
     }
 }
