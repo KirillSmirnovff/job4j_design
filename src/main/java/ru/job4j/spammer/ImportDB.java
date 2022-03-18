@@ -16,22 +16,20 @@ public class ImportDB {
         this.dump = dump;
     }
 
+    private String[] check(String[] array) {
+        if (array.length != 2 || array[0].isBlank() || array[1].isBlank()) {
+            throw new IllegalArgumentException("Wrong format of dump file line");
+        }
+        return array;
+    }
+
     public List<User> load() {
         List<User> users = new ArrayList<>();
         try (BufferedReader rd = new BufferedReader(new FileReader(dump))) {
-            String[][] array = rd.lines()
+            rd.lines()
                     .map(s -> s.split(";"))
-                    .toArray(String[][]::new);
-            int count = 1;
-            for (String[] pair : array) {
-                if (pair.length != 2 || pair[0].isBlank() || pair[1].isBlank()) {
-                    System.out.printf("line %o in %s file was skipped because of wrong argument format", count++, dump);
-                    System.out.println();
-                    continue;
-                }
-                users.add(new User(pair[0], pair[1]));
-                count++;
-            }
+                    .map(this::check)
+                    .forEach(array -> users.add(new User(array[0], array[1])));
         } catch (IOException e) {
             e.printStackTrace();
         }
